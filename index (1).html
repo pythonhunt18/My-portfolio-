@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eshan Laskar — Dev & Artist</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=DM+Serif+Display:ital@0;1&display=swap');
+
+:root {
+  --bg: #080810;
+  --fg: #f0ede6;
+  --accent1: #ff3c3c;
+  --accent2: #00ffd5;
+  --accent3: #ffd600;
+  --mid: #10101c;
+  --muted: #55556a;
+  --card: #0e0e1a;
+  --border: rgba(255,255,255,0.07);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: 'Space Mono', 'Courier New', monospace;
+  overflow-x: hidden;
+  cursor: none;
+  line-height: 1.6;
+}
+
+/* ── CURSOR ── */
+#cur { width:10px; height:10px; background:var(--accent2); border-radius:50%; position:fixed; top:0; left:0; pointer-events:none; z-index:9999; transition:transform .08s; mix-blend-mode:difference; }
+#cur2 { width:34px; height:34px; border:1.5px solid var(--accent2); border-radius:50%; position:fixed; top:0; left:0; pointer-events:none; z-index:9998; mix-blend-mode:difference; }
+
+/* ── NAV ── */
+nav {
+  position: fixed; top:0; left:0; right:0; z-index:500;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:1.2rem 3rem;
+  background:rgba(8,8,16,0.92);
+  border-bottom:1px solid var(--border);
+  backdrop-filter:blur(12px);
+}
+.logo { font-family:'Bebas Neue',sans-serif; font-size:1.6rem; letter-spacing:4px; color:var(--fg); text-decoration:none; }
+.logo span { color:var(--accent1); }
+.navlinks { display:flex; gap:2rem; list-style:none; }
+.navlinks a { text-decoration:none; color:var(--muted); font-size:.65rem; letter-spacing:2px; text-transform:uppercase; transition:color .3s; }
+.navlinks a:hover { color:var(--accent2); }
+
+/* ── SIDE DOTS ── */
+.dots { position:fixed; right:1.5rem; top:50%; transform:translateY(-50%); z-index:400; display:flex; flex-direction:column; gap:.7rem; }
+.dot { width:7px; height:7px; border-radius:50%; background:var(--muted); cursor:pointer; transition:background .3s,transform .3s; }
+.dot.on { background:var(--accent2); transform:scale(1.6); }
+
+/* ── SECTIONS ── */
+section { padding:7rem 3rem; }
+
+/* ── HERO ── */
+#hero {
+  min-height:100vh;
+  display:flex; align-items:center;
+  position:relative; overflow:hidden;
+  padding-top: 5rem;
+}
+.hero-bg {
+  position:absolute; inset:0; z-index:0;
+  background:
+    radial-gradient(ellipse 70% 60% at 75% 50%, rgba(0,255,213,.07) 0%,transparent 65%),
+    radial-gradient(ellipse 50% 70% at 20% 80%, rgba(255,60,60,.06) 0%,transparent 60%),
+    radial-gradient(ellipse 40% 40% at 80% 15%, rgba(255,214,0,.05) 0%,transparent 55%);
+}
+.grid-lines {
+  position:absolute; inset:0; z-index:0;
+  background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);
+  background-size:55px 55px;
+  animation:gridScroll 25s linear infinite;
+}
+@keyframes gridScroll { to { background-position:55px 55px; } }
+
+.hero-inner { position:relative; z-index:2; max-width:750px; }
+
+.hero-tag {
+  display:inline-flex; align-items:center; gap:.8rem;
+  font-size:.6rem; letter-spacing:3px; text-transform:uppercase;
+  color:var(--accent2); border:1px solid rgba(0,255,213,.35);
+  padding:.4rem 1rem; margin-bottom:2rem;
+  animation:fadeUp .8s ease .1s both;
+}
+.hero-tag::before { content:''; width:8px; height:8px; border-radius:50%; background:var(--accent2); animation:blink 1.5s ease-in-out infinite; }
+@keyframes blink { 0%,100%{opacity:.3} 50%{opacity:1} }
+
+.hero-h1 {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(5rem,13vw,10rem);
+  line-height:.88;
+  letter-spacing:2px;
+  animation:fadeUp .8s ease .25s both;
+}
+.hero-h1 .stroke { -webkit-text-stroke:1.5px var(--fg); color:transparent; display:block; }
+.hero-h1 .red { color:var(--accent1); display:block; }
+
+.hero-sub {
+  margin-top:1.8rem; font-size:.78rem; color:var(--muted);
+  line-height:1.9; max-width:480px;
+  animation:fadeUp .8s ease .4s both;
+}
+.hero-sub strong { color:var(--fg); }
+
+.hero-btns {
+  display:flex; gap:1rem; margin-top:2.2rem; flex-wrap:wrap;
+  animation:fadeUp .8s ease .55s both;
+}
+.btn {
+  text-decoration:none; font-family:'Space Mono',monospace;
+  font-size:.65rem; letter-spacing:2px; text-transform:uppercase;
+  padding:.85rem 2rem; border:1px solid; transition:all .3s; cursor:pointer;
+}
+.btn-c { color:var(--accent2); border-color:var(--accent2); }
+.btn-c:hover { background:var(--accent2); color:#000; }
+.btn-w { color:var(--fg); border-color:var(--muted); }
+.btn-w:hover { border-color:var(--fg); }
+
+/* hero orb */
+.hero-orb {
+  position:absolute; right:4rem; top:50%; transform:translateY(-50%);
+  width:380px; height:380px; z-index:2;
+  animation:fadeUp 1s ease .3s both;
+}
+.orb-r {
+  position:absolute; border-radius:50%; border:1px solid;
+  animation:spin linear infinite;
+}
+.orb-r:nth-child(1){inset:0;border-color:rgba(0,255,213,.18);animation-duration:22s;}
+.orb-r:nth-child(2){inset:35px;border-color:rgba(255,60,60,.12);animation-duration:32s;animation-direction:reverse;}
+.orb-r:nth-child(3){inset:75px;border-color:rgba(255,214,0,.1);animation-duration:17s;}
+.orb-r:nth-child(4){inset:115px;border-color:rgba(0,255,213,.1);animation-duration:28s;animation-direction:reverse;}
+.orb-core {
+  position:absolute; inset:145px; border-radius:50%;
+  background:radial-gradient(circle,rgba(0,255,213,.2) 0%,rgba(255,60,60,.08) 60%,transparent 100%);
+  animation:pulse 4s ease-in-out infinite;
+}
+.orb-txt {
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  font-family:'Bebas Neue',sans-serif; font-size:.85rem; letter-spacing:5px;
+  color:var(--accent2); text-align:center; line-height:1.5;
+}
+.fbadge {
+  position:absolute; font-size:.55rem; letter-spacing:2px; text-transform:uppercase;
+  padding:.35rem .75rem; border:1px solid; background:var(--card);
+  animation:float 5s ease-in-out infinite;
+}
+.fb1{top:8%;left:-8%;border-color:var(--accent2);color:var(--accent2);animation-delay:0s;}
+.fb2{top:28%;right:-2%;border-color:var(--accent1);color:var(--accent1);animation-delay:.8s;}
+.fb3{bottom:22%;left:-5%;border-color:var(--accent3);color:var(--accent3);animation-delay:1.6s;}
+.fb4{bottom:8%;right:2%;border-color:var(--muted);color:var(--fg);animation-delay:.4s;}
+.fb5{top:60%;left:-18%;border-color:var(--accent2);color:var(--accent2);animation-delay:1.2s;}
+
+@keyframes spin{to{transform:rotate(360deg);}}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:.7;}50%{transform:scale(1.15);opacity:1;}}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);}}
+
+.scroll-hint {
+  position:absolute; bottom:2rem; left:50%; transform:translateX(-50%);
+  text-align:center; font-size:.55rem; letter-spacing:3px; color:var(--muted); z-index:10;
+}
+.scroll-line { width:1px; height:44px; background:linear-gradient(to bottom,var(--accent2),transparent); margin:.5rem auto 0; animation:scrollP 2s ease-in-out infinite; }
+@keyframes scrollP{0%,100%{opacity:.3;}50%{opacity:1;}}
+
+/* ── ABOUT ── */
+#about { background:var(--mid); position:relative; overflow:hidden; }
+#about::after {
+  content:'ESHAN'; position:absolute; right:-1rem; top:50%; transform:translateY(-50%);
+  font-family:'Bebas Neue',sans-serif; font-size:18vw; color:rgba(255,255,255,.018); pointer-events:none; letter-spacing:8px;
+}
+.about-grid { display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:center; }
+.about-card {
+  background:var(--card); border:1px solid var(--border); padding:2.5rem; position:relative;
+}
+.about-card::before {
+  content:''; position:absolute; top:-1px; left:2rem; right:2rem; height:2px;
+  background:linear-gradient(to right,var(--accent1),var(--accent2),var(--accent3));
+}
+.aname { font-family:'Bebas Neue',sans-serif; font-size:2.2rem; letter-spacing:4px; margin-bottom:.2rem; }
+.arole { font-size:.6rem; letter-spacing:3px; color:var(--accent2); margin-bottom:2rem; }
+.astats { display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; margin-top:1.5rem; }
+.astat { border-left:2px solid var(--accent1); padding-left:.9rem; }
+.astat-n { font-family:'Bebas Neue',sans-serif; font-size:2rem; line-height:1; }
+.astat-n span { color:var(--accent1); }
+.astat-l { font-size:.55rem; letter-spacing:2px; color:var(--muted); margin-top:.15rem; }
+.avail {
+  display:inline-flex; align-items:center; gap:.7rem; margin-top:1.8rem;
+  padding:.5rem 1.1rem; background:rgba(0,255,213,.05); border:1px solid rgba(0,255,213,.2);
+  font-size:.6rem; letter-spacing:2px; color:var(--accent2);
+}
+.avail span { width:6px; height:6px; border-radius:50%; background:var(--accent2); display:inline-block; animation:blink 1.5s infinite; }
+
+.stag { font-size:.58rem; letter-spacing:4px; text-transform:uppercase; color:var(--accent1); margin-bottom:.8rem; display:flex; align-items:center; gap:.8rem; }
+.stag::before { content:''; width:24px; height:1px; background:var(--accent1); }
+.stitle { font-family:'Bebas Neue',sans-serif; font-size:clamp(2.5rem,5vw,4.5rem); line-height:1; margin-bottom:.8rem; }
+.stitle em { font-style:italic; font-family:'DM Serif Display',Georgia,serif; color:var(--accent2); }
+.ssub { font-size:.72rem; color:var(--muted); line-height:1.8; max-width:480px; margin-bottom:3rem; }
+.atext { font-size:.75rem; line-height:2; color:var(--muted); }
+.atext p { margin-bottom:1rem; }
+.atext strong { color:var(--fg); }
+
+/* ── SKILLS ── */
+#skills { background:var(--bg); }
+.skills-grid { display:grid; grid-template-columns:1fr 1fr; gap:4rem; }
+.col-title {
+  font-family:'Bebas Neue',sans-serif; font-size:1.3rem; letter-spacing:3px;
+  margin-bottom:1.8rem; display:flex; align-items:center; gap:.8rem;
+}
+.col-title::after { content:''; flex:1; height:1px; background:linear-gradient(to right,var(--muted),transparent); }
+.ski { margin-bottom:1.4rem; }
+.ski-hd { display:flex; justify-content:space-between; margin-bottom:.5rem; }
+.ski-nm { font-size:.65rem; letter-spacing:2px; text-transform:uppercase; }
+.ski-pc { font-size:.65rem; color:var(--accent2); font-weight:700; }
+.ski-bar { height:2px; background:var(--mid); overflow:hidden; }
+.ski-fill {
+  height:100%; background:linear-gradient(to right,var(--accent1),var(--accent2));
+  transform-origin:left; transform:scaleX(0);
+  transition:transform 1.3s cubic-bezier(.16,1,.3,1);
+}
+.mskills { display:grid; grid-template-columns:1fr 1fr; gap:.9rem; }
+.mcard {
+  background:var(--card); border:1px solid var(--border); padding:1.1rem;
+  transition:border-color .3s,transform .3s; position:relative; overflow:hidden;
+}
+.mcard::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; background:linear-gradient(to right,var(--accent3),var(--accent1)); transform:scaleX(0); transform-origin:left; transition:transform .3s; }
+.mcard:hover { border-color:rgba(255,214,0,.3); transform:translateY(-4px); }
+.mcard:hover::after { transform:scaleX(1); }
+.mcard-icon { font-size:1.3rem; margin-bottom:.4rem; }
+.mcard-name { font-size:.6rem; letter-spacing:2px; color:var(--accent3); }
+.mcard-desc { font-size:.58rem; color:var(--muted); margin-top:.25rem; line-height:1.5; }
+
+/* ── PROJECTS ── */
+#projects { background:var(--mid); position:relative; overflow:hidden; }
+#projects::after { content:'WORK'; position:absolute; left:-1rem; bottom:-3rem; font-family:'Bebas Neue',sans-serif; font-size:20vw; color:rgba(255,255,255,.015); pointer-events:none; }
+.pgrid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.2rem; }
+.pcard {
+  background:var(--card); border:1px solid var(--border); overflow:hidden;
+  transition:transform .4s,border-color .4s;
+}
+.pcard:hover { transform:translateY(-7px); border-color:rgba(0,255,213,.2); }
+.pthumb { height:160px; position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+.pthumb-icon { font-size:2.8rem; opacity:.35; transition:opacity .3s,transform .3s; }
+.pcard:hover .pthumb-icon { opacity:.65; transform:scale(1.1); }
+.pt1{background:linear-gradient(135deg,#1a0a2e,#0d1a2e,#0a2e1a);}
+.pt2{background:linear-gradient(135deg,#2e0a0a,#1a0a0a,#2e1a0a);}
+.pt3{background:linear-gradient(135deg,#0a1a2e,#0a2e2e,#1a0a2e);}
+.pt4{background:linear-gradient(135deg,#1a2e0a,#2e2e0a,#2e0a1a);}
+.pt5{background:linear-gradient(135deg,#0a0a2e,#2e0a2e,#0a2e2e);}
+.pt6{background:linear-gradient(135deg,#2e1a0a,#2e0a0a,#1a2e0a);}
+.pbody { padding:1.3rem; }
+.plabel { font-size:.52rem; letter-spacing:3px; color:var(--muted); text-transform:uppercase; margin-bottom:.3rem; transition:color .3s; }
+.pcard:hover .plabel { color:var(--accent2); }
+.pname { font-family:'Bebas Neue',sans-serif; font-size:1.3rem; letter-spacing:2px; margin-bottom:.5rem; }
+.pdesc { font-size:.6rem; line-height:1.7; color:var(--muted); }
+.ptags { margin-top:.9rem; display:flex; flex-wrap:wrap; gap:.3rem; }
+.ptag { font-size:.5rem; letter-spacing:1px; padding:.2rem .5rem; border:1px solid var(--border); color:var(--muted); }
+.ptag.c { border-color:rgba(0,255,213,.35); color:var(--accent2); }
+.ptag.h { border-color:rgba(255,60,60,.35); color:var(--accent1); }
+.ptag.m { border-color:rgba(255,214,0,.35); color:var(--accent3); }
+
+/* ── MUSIC ── */
+#music { background:var(--bg); }
+.music-layout { display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:start; }
+
+/* waveform */
+.waveform { display:flex; align-items:flex-end; gap:3px; height:70px; margin-bottom:2rem; }
+.wbar { flex:1; background:linear-gradient(to top,var(--accent1),var(--accent3)); border-radius:2px 2px 0 0; min-height:4px; animation:wbounce 1.4s ease-in-out infinite; }
+@keyframes wbounce{0%,100%{transform:scaleY(.25);}50%{transform:scaleY(1);}}
+
+.ttrack {
+  background:var(--card); border:1px solid var(--border);
+  padding:1.1rem 1.4rem; display:flex; align-items:center; gap:1.1rem;
+  margin-bottom:.7rem; transition:border-color .3s,background .3s; cursor:pointer;
+}
+.ttrack:hover { border-color:rgba(255,214,0,.3); background:rgba(255,214,0,.03); }
+.tnum { font-family:'Bebas Neue',sans-serif; font-size:1.3rem; color:var(--muted); min-width:22px; }
+.tinfo { flex:1; }
+.tname { font-size:.72rem; margin-bottom:.2rem; }
+.tgenre { font-size:.58rem; color:var(--muted); letter-spacing:1px; }
+.tplay {
+  width:30px; height:30px; border-radius:50%; border:1px solid var(--accent3);
+  display:flex; align-items:center; justify-content:center;
+  font-size:.6rem; color:var(--accent3); transition:all .3s;
+}
+.ttrack:hover .tplay { background:var(--accent3); color:#000; }
+
+.sp-btn {
+  display:inline-flex; align-items:center; gap:.9rem; text-decoration:none;
+  background:#1DB954; color:#000; padding:.9rem 1.8rem;
+  font-family:'Space Mono',monospace; font-size:.65rem; font-weight:700;
+  letter-spacing:2px; text-transform:uppercase;
+  transition:transform .3s,box-shadow .3s; margin-top:1.8rem;
+}
+.sp-btn:hover { transform:translateY(-3px); box-shadow:0 10px 30px rgba(29,185,84,.3); }
+
+.music-info { }
+.mq { font-size:.75rem; line-height:2; color:var(--muted); margin-bottom:1.2rem; }
+.mq strong { color:var(--fg); }
+.mq em { color:var(--accent3); font-style:italic; }
+.music-boxes { display:grid; grid-template-columns:1fr 1fr; gap:.9rem; margin-top:2rem; }
+.mbox { background:var(--card); border:1px solid var(--border); padding:1.1rem; }
+.mbox-t { font-family:'Bebas Neue',sans-serif; font-size:1.6rem; }
+.mbox-s { font-size:.55rem; letter-spacing:2px; color:var(--muted); margin-top:.2rem; }
+
+/* ── CONNECT ── */
+#connect { background:var(--mid); text-align:center; position:relative; overflow:hidden; }
+#connect::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 55% 40% at 50% 50%,rgba(0,255,213,.05) 0%,transparent 70%); }
+.connect-in { position:relative; z-index:2; max-width:680px; margin:0 auto; }
+.ctag-line {
+  font-family:'DM Serif Display',Georgia,serif; font-style:italic;
+  font-size:clamp(1.2rem,3vw,2rem); color:var(--muted); line-height:1.5; margin-top:1rem; margin-bottom:.5rem;
+}
+.ctag-line strong { color:var(--fg); font-style:normal; font-family:'Bebas Neue',sans-serif; font-size:1.1em; }
+.clinks { display:flex; gap:1.2rem; justify-content:center; margin-top:2.5rem; flex-wrap:wrap; }
+.sbtn {
+  text-decoration:none; display:flex; align-items:center; gap:.8rem;
+  padding:1rem 1.8rem; border:1px solid; font-size:.65rem;
+  letter-spacing:2px; text-transform:uppercase; transition:all .3s;
+  font-family:'Space Mono',monospace;
+}
+.sbtn.ig { color:#E1306C; border-color:#E1306C; }
+.sbtn.ig:hover { background:#E1306C; color:#fff; box-shadow:0 8px 25px rgba(225,48,108,.3); }
+.sbtn.sp2 { color:#1DB954; border-color:#1DB954; }
+.sbtn.sp2:hover { background:#1DB954; color:#000; box-shadow:0 8px 25px rgba(29,185,84,.3); }
+.sbtn.em { color:var(--accent2); border-color:var(--accent2); }
+.sbtn.em:hover { background:var(--accent2); color:#000; }
+.eml { margin-top:1.8rem; font-size:.65rem; letter-spacing:2px; color:var(--muted); }
+.eml a { color:var(--accent2); text-decoration:none; border-bottom:1px solid transparent; transition:border-color .3s; }
+.eml a:hover { border-color:var(--accent2); }
+
+/* ── FOOTER ── */
+footer {
+  background:var(--bg); border-top:1px solid var(--border);
+  padding:1.8rem 3rem; display:flex; align-items:center; justify-content:space-between;
+}
+.flogo { font-family:'Bebas Neue',sans-serif; font-size:1.3rem; letter-spacing:3px; }
+.flogo span { color:var(--accent1); }
+.fcopy { font-size:.55rem; color:var(--muted); letter-spacing:2px; }
+.fsoc { display:flex; gap:1.5rem; }
+.fsoc a { text-decoration:none; font-size:.58rem; letter-spacing:2px; color:var(--muted); transition:color .3s; }
+.fsoc a:hover { color:var(--accent2); }
+
+/* ── REVEAL ── */
+.rv { opacity:0; transform:translateY(35px); transition:opacity .8s ease,transform .8s cubic-bezier(.16,1,.3,1); }
+.rv.in { opacity:1; transform:translateY(0); }
+
+/* ── RESPONSIVE ── */
+@media(max-width:860px){
+  nav{padding:1rem 1.5rem;}
+  .navlinks{display:none;}
+  section{padding:4.5rem 1.5rem;}
+  #hero{padding-top:5rem;}
+  .hero-orb{display:none;}
+  .about-grid,.skills-grid,.music-layout{grid-template-columns:1fr;gap:2.5rem;}
+  .pgrid{grid-template-columns:1fr 1fr;}
+  footer{flex-direction:column;gap:1rem;text-align:center;}
+  .dots{display:none;}
+}
+@media(max-width:520px){
+  .pgrid{grid-template-columns:1fr;}
+  .astats,.music-boxes{grid-template-columns:1fr 1fr;}
+  .mskills{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur2"></div>
+
+<!-- SIDE DOTS -->
+<div class="dots">
+  <div class="dot on" data-s="hero" title="Home"></div>
+  <div class="dot" data-s="about" title="About"></div>
+  <div class="dot" data-s="skills" title="Skills"></div>
+  <div class="dot" data-s="projects" title="Projects"></div>
+  <div class="dot" data-s="music" title="Music"></div>
+  <div class="dot" data-s="connect" title="Connect"></div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="logo">ESHAN<span>.</span>LASKAR</a>
+  <ul class="navlinks">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#music">Music</a></li>
+    <li><a href="#connect">Connect</a></li>
+  </ul>
+</nav>
+
+<!-- ════════════════════ HERO ════════════════════ -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="grid-lines"></div>
+
+  <div class="hero-inner">
+    <div class="hero-tag">Software Engineer &amp; Music Artist</div>
+    <h1 class="hero-h1">
+      CODE
+      <span class="red">MEETS</span>
+      <span class="stroke">MUSIC</span>
+    </h1>
+    <p class="hero-sub">
+      Hey, I'm <strong>Eshan Laskar</strong>. I build fast, clean software —
+      and I create music that hits different. Two worlds. One obsession.
+    </p>
+    <div class="hero-btns">
+      <a href="#projects" class="btn btn-c">View Projects</a>
+      <a href="#music" class="btn btn-w">Hear My Music</a>
+    </div>
+  </div>
+
+  <!-- ORB -->
+  <div class="hero-orb">
+    <div class="orb-r"></div>
+    <div class="orb-r"></div>
+    <div class="orb-r"></div>
+    <div class="orb-r"></div>
+    <div class="orb-core"></div>
+    <div class="orb-txt">DEV<br>&amp;<br>ARTIST</div>
+    <div class="fbadge fb1">HTML / CSS</div>
+    <div class="fbadge fb2">C / C++</div>
+    <div class="fbadge fb3">🎵 Songwriter</div>
+    <div class="fbadge fb4">Music Prod.</div>
+    <div class="fbadge fb5">🎤 Singer</div>
+  </div>
+
+  <div class="scroll-hint">SCROLL<div class="scroll-line"></div></div>
+</section>
+
+<!-- ════════════════════ ABOUT ════════════════════ -->
+<section id="about">
+  <div class="about-grid">
+    <div class="rv">
+      <div class="about-card">
+        <div class="aname">ESHAN LASKAR</div>
+        <div class="arole">// Software Engineer &amp; Music Artist · Venom on Spotify</div>
+        <div class="astats">
+          <div class="astat">
+            <div class="astat-n">2<span>+</span></div>
+            <div class="astat-l">Years Coding</div>
+          </div>
+          <div class="astat">
+            <div class="astat-n">10<span>+</span></div>
+            <div class="astat-l">Projects Built</div>
+          </div>
+          <div class="astat">
+            <div class="astat-n">3</div>
+            <div class="astat-l">Songs Released</div>
+          </div>
+          <div class="astat">
+            <div class="astat-n">∞</div>
+            <div class="astat-l">Ideas Queued</div>
+          </div>
+        </div>
+        <div class="avail"><span></span>Open to collabs &amp; projects</div>
+      </div>
+    </div>
+
+    <div class="rv" style="transition-delay:.15s">
+      <div class="stag">About Me</div>
+      <h2 class="stitle">Builder.<br><em>Creator.</em></h2>
+      <div class="atext">
+        <p>I'm <strong>Eshan Laskar</strong> — a software engineer rooted in <strong>C, C++, HTML and CSS</strong>. I love building things from scratch, understanding how machines think, and writing code that is clean and fast.</p>
+        <p>Off-screen, I go by <strong>Venom</strong> on Spotify. I write raps, sing them, and slowly archive my creations — every release is a snapshot of who I am in that moment.</p>
+        <p>Whether debugging a program or finishing a verse — <strong>the obsession is the same.</strong> Break it, understand it, rebuild it better.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ SKILLS ════════════════════ -->
+<section id="skills">
+  <div class="stag rv">What I Do</div>
+  <h2 class="stitle rv">Skills &amp;<br><em>Expertise</em></h2>
+  <p class="ssub rv">Technical precision meets creative expression.</p>
+
+  <div class="skills-grid">
+    <div class="rv" style="transition-delay:.1s">
+      <div class="col-title">⌨️ Engineering</div>
+
+      <div class="ski">
+        <div class="ski-hd"><span class="ski-nm">HTML5 / CSS3</span><span class="ski-pc">92%</span></div>
+        <div class="ski-bar"><div class="ski-fill" data-w=".92"></div></div>
+      </div>
+      <div class="ski">
+        <div class="ski-hd"><span class="ski-nm">C Programming</span><span class="ski-pc">88%</span></div>
+        <div class="ski-bar"><div class="ski-fill" data-w=".88"></div></div>
+      </div>
+      <div class="ski">
+        <div class="ski-hd"><span class="ski-nm">C++ / OOP</span><span class="ski-pc">85%</span></div>
+        <div class="ski-bar"><div class="ski-fill" data-w=".85"></div></div>
+      </div>
+      <div class="ski">
+        <div class="ski-hd"><span class="ski-nm">Data Structures &amp; Algorithms</span><span class="ski-pc">80%</span></div>
+        <div class="ski-bar"><div class="ski-fill" data-w=".80"></div></div>
+      </div>
+      <div class="ski">
+        <div class="ski-hd"><span class="ski-nm">System Design</span><span class="ski-pc">74%</span></div>
+        <div class="ski-bar"><div class="ski-fill" data-w=".74"></div></div>
+      </div>
+    </div>
+
+    <div class="rv" style="transition-delay:.2s">
+      <div class="col-title">🎵 Music Arts</div>
+      <div class="mskills">
+        <div class="mcard">
+          <div class="mcard-icon">🎤</div>
+          <div class="mcard-name">Singing</div>
+          <div class="mcard-desc">Vocal performance across Hindi &amp; English genres</div>
+        </div>
+        <div class="mcard">
+          <div class="mcard-icon">✍️</div>
+          <div class="mcard-name">Songwriting</div>
+          <div class="mcard-desc">Crafting lyrics that tell real stories</div>
+        </div>
+        <div class="mcard">
+          <div class="mcard-icon">🎛️</div>
+          <div class="mcard-name">Production</div>
+          <div class="mcard-desc">Beat-making and arrangement from scratch</div>
+        </div>
+        <div class="mcard">
+          <div class="mcard-icon">🎸</div>
+          <div class="mcard-name">Rap</div>
+          <div class="mcard-desc">Writing and delivering rap verses with flow</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ PROJECTS ════════════════════ -->
+<section id="projects">
+  <div class="stag rv">My Work</div>
+  <h2 class="stitle rv">Selected<br><em>Projects</em></h2>
+  <p class="ssub rv">Things I've built — from low-level systems to polished frontends.</p>
+
+  <div class="pgrid">
+
+    <div class="pcard rv">
+      <div class="pthumb pt1"><div class="pthumb-icon">🖥️</div></div>
+      <div class="pbody">
+        <div class="plabel">C · Systems</div>
+        <div class="pname">MEMORY MANAGER</div>
+        <div class="pdesc">Custom memory allocator in C with first-fit, best-fit &amp; worst-fit strategies. Benchmarked against glibc malloc.</div>
+        <div class="ptags"><span class="ptag c">C</span><span class="ptag">Systems</span><span class="ptag">Low-Level</span></div>
+      </div>
+    </div>
+
+    <div class="pcard rv" style="transition-delay:.08s">
+      <div class="pthumb pt2"><div class="pthumb-icon">🎮</div></div>
+      <div class="pbody">
+        <div class="plabel">C++ · Game</div>
+        <div class="pname">PIXEL ARCADE</div>
+        <div class="pdesc">Terminal-based game engine in C++ with entity system, collision detection, and a level loader.</div>
+        <div class="ptags"><span class="ptag c">C++</span><span class="ptag">OOP</span><span class="ptag">Game Dev</span></div>
+      </div>
+    </div>
+
+    <div class="pcard rv" style="transition-delay:.16s">
+      <div class="pthumb pt3"><div class="pthumb-icon">🌐</div></div>
+      <div class="pbody">
+        <div class="plabel">HTML · CSS</div>
+        <div class="pname">NEON UI KIT</div>
+        <div class="pdesc">30+ handcrafted UI components — pure HTML/CSS, zero JavaScript, zero frameworks. Clean code only.</div>
+        <div class="ptags"><span class="ptag h">HTML</span><span class="ptag h">CSS</span><span class="ptag">Design</span></div>
+      </div>
+    </div>
+
+    <div class="pcard rv" style="transition-delay:.08s">
+      <div class="pthumb pt4"><div class="pthumb-icon">📡</div></div>
+      <div class="pbody">
+        <div class="plabel">C · Networking</div>
+        <div class="pname">SOCKET SERVER</div>
+        <div class="pdesc">Multi-threaded TCP chat server in C using POSIX sockets. Handles 100+ concurrent clients.</div>
+        <div class="ptags"><span class="ptag c">C</span><span class="ptag">Networking</span><span class="ptag">Threads</span></div>
+      </div>
+    </div>
+
+    <div class="pcard rv" style="transition-delay:.14s">
+      <div class="pthumb pt5"><div class="pthumb-icon">🎵</div></div>
+      <div class="pbody">
+        <div class="plabel">HTML · Music</div>
+        <div class="pname">LYRIC CANVAS</div>
+        <div class="pdesc">Web app for writing &amp; formatting song lyrics. Dark mode, rhyme highlighting, syllable counter.</div>
+        <div class="ptags"><span class="ptag h">HTML</span><span class="ptag h">CSS</span><span class="ptag m">Music</span></div>
+      </div>
+    </div>
+
+    <div class="pcard rv" style="transition-delay:.2s">
+      <div class="pthumb pt6"><div class="pthumb-icon">⚡</div></div>
+      <div class="pbody">
+        <div class="plabel">C++ · Algorithms</div>
+        <div class="pname">SORT LAB</div>
+        <div class="pdesc">Visual benchmark comparing 10 sorting algorithms in real-time, rendered in the terminal with ANSI art.</div>
+        <div class="ptags"><span class="ptag c">C++</span><span class="ptag">Algorithms</span><span class="ptag">CLI</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════════════════ MUSIC ════════════════════ -->
+<section id="music">
+  <div class="stag rv">The Other Side</div>
+  <h2 class="stitle rv">My <em>Music</em></h2>
+  <p class="ssub rv">Real songs. Real feelings. Find me on Spotify as <strong>Venom</strong>.</p>
+
+  <div class="music-layout">
+    <div class="rv">
+      <div class="waveform" id="wf"></div>
+
+      <div class="ttrack" onclick="window.open('https://open.spotify.com/album/5ra99YI4GJ6nxUViqbXfzA','_blank')">
+        <div class="tnum">01</div>
+        <div class="tinfo">
+          <div class="tname">Tum paas ho</div>
+          <div class="tgenre">Hindi Rap · 2026 · Latest Release</div>
+        </div>
+        <div class="tplay">▶</div>
+      </div>
+
+      <div class="ttrack" onclick="window.open('https://open.spotify.com/album/55JNsiCYJmlJ9g1ntWS1Av','_blank')">
+        <div class="tnum">02</div>
+        <div class="tinfo">
+          <div class="tname">Loot Jaunga</div>
+          <div class="tgenre">Rap / Hindi · 2026</div>
+        </div>
+        <div class="tplay">▶</div>
+      </div>
+
+      <div class="ttrack" onclick="window.open('https://open.spotify.com/album/0D1AEYoiGrzHi5l1WrTZzA','_blank')">
+        <div class="tnum">03</div>
+        <div class="tinfo">
+          <div class="tname">jhunt si</div>
+          <div class="tgenre">Rap / Hip-Hop · 2025</div>
+        </div>
+        <div class="tplay">▶</div>
+      </div>
+
+      <a href="https://open.spotify.com/artist/1fufP2ZjmTR9WXkyN7DYXd?si=qSrozqPhRUWgZaBuqzrJbg" target="_blank" class="sp-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.36-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+        Listen on Spotify — Venom
+      </a>
+    </div>
+
+    <div class="rv" style="transition-delay:.18s">
+      <div class="mq">
+        I go by <strong>Venom</strong> on Spotify. My music is raw and honest — I write raps and songs to archive who I am at each point in life.
+      </div>
+      <div class="mq">
+        From <strong>jhunt si</strong> to <strong>Tum paas ho</strong> — every track is me levelling up.
+        <em>Slowly learning, slowly improving.</em>
+      </div>
+      <div class="music-boxes">
+        <div class="mbox">
+          <div class="mbox-t" style="color:var(--accent3)">WRITING</div>
+          <div class="mbox-s">Lyrics &amp; Composition</div>
+        </div>
+        <div class="mbox">
+          <div class="mbox-t" style="color:var(--accent1)">VOCALS</div>
+          <div class="mbox-s">Performance &amp; Delivery</div>
+        </div>
+        <div class="mbox">
+          <div class="mbox-t" style="color:var(--accent2)">PRODUCE</div>
+          <div class="mbox-s">Beats &amp; Arrangement</div>
+        </div>
+        <div class="mbox">
+          <div class="mbox-t" style="color:var(--fg)">RAP</div>
+          <div class="mbox-s">Hindi &amp; English Flow</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ CONNECT ════════════════════ -->
+<section id="connect">
+  <div class="connect-in">
+    <div class="stag rv" style="justify-content:center">Let's Link</div>
+    <h2 class="stitle rv" style="text-align:center">Get In<br><em>Touch</em></h2>
+    <p class="ctag-line rv">Whether it's a <strong>project collab</strong>, a <strong>music session</strong>, or just to say hey — I'm here.</p>
+
+    <div class="clinks rv" style="transition-delay:.15s">
+      <a href="https://www.instagram.com/ishanth._._?igsh=Y3J0YWFoeGdrMWo5" target="_blank" class="sbtn ig">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        @ishanth._._
+      </a>
+      <a href="https://open.spotify.com/artist/1fufP2ZjmTR9WXkyN7DYXd?si=qSrozqPhRUWgZaBuqzrJbg" target="_blank" class="sbtn sp2">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.36-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+        Venom on Spotify
+      </a>
+      <a href="mailto:eshanlaskar12@gmail.com" class="sbtn em">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        Email Me
+      </a>
+    </div>
+    <p class="eml rv" style="transition-delay:.25s">eshanlaskar12@gmail.com</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="flogo">ESHAN<span>.</span>L</div>
+  <div class="fcopy">© 2025 ESHAN LASKAR — CODE &amp; SOUND</div>
+  <div class="fsoc">
+    <a href="https://www.instagram.com/ishanth._._?igsh=Y3J0YWFoeGdrMWo5" target="_blank">Instagram</a>
+    <a href="https://open.spotify.com/artist/1fufP2ZjmTR9WXkyN7DYXd?si=qSrozqPhRUWgZaBuqzrJbg" target="_blank">Spotify</a>
+    <a href="mailto:eshanlaskar12@gmail.com">Email</a>
+  </div>
+</footer>
+
+<script>
+// ── CURSOR ──
+const cur = document.getElementById('cur');
+const cur2 = document.getElementById('cur2');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove', e => {
+  mx=e.clientX; my=e.clientY;
+  cur.style.transform = `translate(${mx-5}px,${my-5}px)`;
+});
+(function loop(){
+  rx+=(mx-rx-17)*.11; ry+=(my-ry-17)*.11;
+  cur2.style.transform=`translate(${rx}px,${ry}px)`;
+  requestAnimationFrame(loop);
+})();
+document.querySelectorAll('a,button,.pcard,.ttrack').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur2.style.width='55px';cur2.style.height='55px';});
+  el.addEventListener('mouseleave',()=>{cur2.style.width='34px';cur2.style.height='34px';});
+});
+
+// ── WAVEFORM ──
+const wf = document.getElementById('wf');
+for(let i=0;i<38;i++){
+  const b=document.createElement('div'); b.className='wbar';
+  b.style.height=(16+Math.random()*50)+'px';
+  b.style.animationDelay=(i*.04)+'s';
+  b.style.animationDuration=(.9+Math.random()*.7)+'s';
+  wf.appendChild(b);
+}
+
+// ── SCROLL REVEAL ──
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('in');
+      e.target.querySelectorAll('.ski-fill').forEach(f=>{
+        f.style.transform=`scaleX(${f.dataset.w})`;
+      });
+    }
+  });
+},{threshold:.12});
+document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+
+// standalone skill bar observer
+document.querySelectorAll('.ski-fill').forEach(f=>{
+  const o=new IntersectionObserver(en=>{
+    if(en[0].isIntersecting){f.style.transform=`scaleX(${f.dataset.w})`;o.disconnect();}
+  },{threshold:.1});
+  o.observe(f);
+});
+
+// ── DOT NAV ──
+const sids=['hero','about','skills','projects','music','connect'];
+const dots=document.querySelectorAll('.dot');
+dots.forEach((d,i)=>d.addEventListener('click',()=>{
+  document.getElementById(sids[i])?.scrollIntoView({behavior:'smooth'});
+}));
+window.addEventListener('scroll',()=>{
+  const mid=window.scrollY+window.innerHeight/2;
+  sids.forEach((id,i)=>{
+    const el=document.getElementById(id);
+    if(!el) return;
+    if(mid>=el.offsetTop && mid<el.offsetTop+el.offsetHeight){
+      dots.forEach(d=>d.classList.remove('on'));
+      dots[i]?.classList.add('on');
+    }
+  });
+});
+</script>
+</body>
+</html>
